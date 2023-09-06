@@ -1,5 +1,6 @@
 const webcamFeedContainer = document.getElementById('webcam-feed-container');
 let accessToken;
+let room;
 
 const startRoom = async () => {
     const roomName = 'myRoom';
@@ -15,6 +16,30 @@ const startRoom = async () => {
     accessToken = token;
 
     const room = await joinVideoRoom(roomName, token);
+
+    const btnMuteMic = document.getElementById('btn-mute-mic');
+    let isMicMuted = false;
+
+    btnMuteMic.addEventListener('click', () => {
+    if (!accessToken) {
+        return;
+    }
+
+    if (!isMicMuted) {
+        room.localParticipant.audioTracks.forEach((audioTrackPublication) => {
+            audioTrackPublication.track.disable();
+        });
+        btnMuteMic.innerText = 'Unmute Mic';
+    } else {
+        room.localParticipant.audioTracks.forEach((audioTrackPublication) => {
+            audioTrackPublication.track.enable();
+        });
+        btnMuteMic.innerText = 'Mute Mic';
+    }
+
+    isMicMuted = !isMicMuted;
+});
+
 
     handleConnectedParticipant(room.localParticipant);
     room.participants.forEach(handleConnectedParticipant);
@@ -69,5 +94,6 @@ const handleDisconnectedParticipant = (participant) => {
     const participantDiv = document.getElementById(participant.identity);
     participantDiv.remove();
 };
+
 
 startRoom();
