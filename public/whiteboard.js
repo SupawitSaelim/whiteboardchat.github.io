@@ -205,7 +205,7 @@ const updateDocument = (data, action) => {
 
 const startTimer = () => {
     clearCanvas();
-    timeLeft = 60;
+    timeLeft = 30;
     btnDraw.disabled = true;
     const interval = setInterval(() => {
         if (timeLeft > -1) {
